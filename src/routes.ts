@@ -24,6 +24,12 @@ export class Routes {
       .route("/api/footprint/monthly")
       .get(authMiddleware, this.footprintController.getMonthlyFootprint);
     app
+      .route("/api/footprint/trip")
+      .patch(authMiddleware, this.footprintController.updateTrip);
+    app
+      .route("/api/footprint/trips")
+      .get(authMiddleware, this.footprintController.getTrips);
+    app
       .route("/api/advices/today")
       .get(authMiddleware, this.advicesController.getDailyAdvice);
   }
