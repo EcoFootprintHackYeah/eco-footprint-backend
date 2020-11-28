@@ -34,9 +34,10 @@ export class User extends Model {
   public readonly updatedAt!: Date;
 
   public computeDailyCarbonFootprint(): number {
-    const electricityPrice = (<any>electricity)[this.country];
+    const lowerCasedCountry = this.country.toLowerCase();
+    const electricityPrice = (<any>electricity)[lowerCasedCountry];
     const electricityType: ElectricityType = (<any>ElectricityType)[
-      this.country
+      lowerCasedCountry
     ];
     // electricity.
     const electricalFootprint = electricityPrice * (this.kwhPerMonth / 30);
@@ -57,6 +58,7 @@ export class User extends Model {
       (this.whiteMeatPerWeek / 7) * FoodPortion * food.whiteMeat +
       (this.redMeatPerWeek / 7) * FoodPortion * food.redMeat +
       (this.fishPerWeek / 7) * FoodPortion * food.fish;
+
     return (
       electricalFootprint + musicFootprint + streamingFootprint + foodFootprint
     );

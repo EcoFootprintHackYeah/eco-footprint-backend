@@ -12,7 +12,7 @@ export class UsersController {
     const body = req.body as CreationData;
     console.log(body);
     const apiKey = Guid.create();
-    User.create<User>({ apiKey: apiKey.toString(), country: body.country })
+    User.create<User>({ apiKey: apiKey.toString(), ...body })
       .then((user: User) => res.status(201).json(user))
       .catch((err: Error) => res.status(500).json(err));
   }
