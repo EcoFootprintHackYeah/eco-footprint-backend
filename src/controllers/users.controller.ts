@@ -16,7 +16,6 @@ export class UsersController {
   public create(req: Request, res: Response) {
     // const userId = Guid.create();
     const body = req.body as CreationData;
-    console.log(body);
     const apiKey = Guid.create();
     User.create<User>({ apiKey: apiKey.toString(), ...body })
       .then((user: User) => res.status(201).json(user))

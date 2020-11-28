@@ -46,7 +46,6 @@ export class User extends Model {
   public getElectricityFootprint() {
     const lowerCasedCountry = this.country.toLowerCase();
     const electricityPrice = (<any>electricityCarbonService)[lowerCasedCountry];
-    console.log(electricityPrice);
     return electricityPrice * (this.kwhPerMonth / 30);
   }
 

@@ -129,7 +129,6 @@ export class FootprintController {
     });
     const totalMonthlyTrips = footprints.reduce((a, b) => a + b.value, 0);
 
-    console.log(footprints);
     const allDays = moment().diff(dateFrom, "days");
     res.status(200).json({
       trips: totalMonthlyTrips,

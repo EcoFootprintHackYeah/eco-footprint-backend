@@ -16,20 +16,20 @@ export const advices: Advice[] = [
   {
     title: "Choose other meat than white",
     body:
-      "Eating white meat instead of red one can reduce produced CO2 amount about three times?",
+      "Eating white meat instead of red can reduce produced CO2 amount about three times?",
     isApplicable: (user) => user.redMeatPerWeek > 1,
   },
   {
     title: "Vegetables for the win!",
     body:
-      "Choose vegetables - world without eating meat would be much more eco-friendly",
+      "Choose vegetables - a world without meat-eaters would be much more eco-friendly",
     isApplicable: (user) =>
       user.redMeatPerWeek + user.whiteMeatPerWeek + user.fishPerWeek > 3,
   },
   {
     title: "Doing great! Try some more vegetables :)",
     body:
-      "You are doing great choosing other meats than the red one! If you want to be even better, prefer vegetables!",
+      "You are doing great choosing other meats than the red one! If you want to do even better, prefer vegetables!",
     isApplicable: (user) =>
       user.redMeatPerWeek == 0 && user.whiteMeatPerWeek + user.fishPerWeek > 0,
   },

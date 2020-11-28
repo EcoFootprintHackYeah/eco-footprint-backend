@@ -4,12 +4,14 @@ import { FootprintController } from "./controllers/footprint.controller";
 import { IndexController } from "./controllers/index.controller";
 import { UsersController } from "./controllers/users.controller";
 import { AdvicesController } from "./controllers/advices.controller";
+import { HistoricalDataController } from "./controllers/historicaldata.controller";
 
 export class Routes {
   public indexController: IndexController = new IndexController();
   public usersController: UsersController = new UsersController();
   public footprintController: FootprintController = new FootprintController();
   public advicesController: AdvicesController = new AdvicesController();
+  public historicalController: HistoricalDataController = new HistoricalDataController();
 
   public routes(app: Application) {
     app.route("/api").get(this.indexController.index);
@@ -35,5 +37,9 @@ export class Routes {
     app
       .route("/api/advices/today")
       .get(authMiddleware, this.advicesController.getDailyAdvice);
+
+    app
+      .route("/api/historicalData")
+      .get(authMiddleware, this.historicalController.getData);
   }
 }
