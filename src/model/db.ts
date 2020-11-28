@@ -1,4 +1,6 @@
 import { Sequelize } from "sequelize";
+// import { Footprint } from "./footprint.model";
+// import { Footprint, User } from "./user.model";
 
 const user = "cristi";
 const host = "localhost";

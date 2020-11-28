@@ -3,6 +3,9 @@ import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 import { Routes } from "./routes";
+import { User } from "./model/user.model";
+import { Footprint } from "./model/footprint.model";
+import { createDb } from "./model/initDb";
 
 // load the environment variables from the .env file
 dotenv.config({
@@ -27,6 +30,7 @@ class Server {
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: false }));
     this.app.use(cors());
+    createDb(false);
   }
 }
 
