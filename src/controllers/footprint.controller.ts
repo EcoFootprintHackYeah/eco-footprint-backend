@@ -44,7 +44,6 @@ export class FootprintController {
   public addTrip(req: Request, res: Response) {
     const sessionUser = res.locals.user as User;
     const body = req.body as CreationData;
-    console.log(sessionUser);
     const value = transportAndDistanceToFootprint(
       body.transport,
       body.totalDistance
@@ -75,6 +74,42 @@ export class FootprintController {
 
     const totalMonthly = footprints.reduce((a, b) => a + b.value, 0);
     const totalAggregatedDaily = footprint * moment().diff(dateFrom, "days");
-    res.status(200).json({ total: totalMonthly + totalAggregatedDaily });
+    res.status(200).json({total: totalMonthly + totalAggregatedDaily});
+  }
+
+  public updateTrip(req: Request, res: Response) {
+    const body = req.body;
+    const value = transportAndDistanceToFootprint(
+      body.transport,
+      body.distance
+    );
+
+    Footprint.findOne({
+      where: {
+        id: body.id,
+      },
+    }).then((footprint) => {
+      if (footprint !== null) {
+        // @ts-ignore
+        footprint.value = value;
+        // @ts-ignore
+        footprint.totalDistance = body.distance;
+        // @ts-ignore
+        footprint.transport = body.transport;
+        footprint.save().then(() => res.status(200).json());
+      } else {
+        res.status(404);
+      }
+    });
+  }
+
+  public getTrips(req: Request, res: Response) {
+    const sessionUser = res.locals.user as User;
+    Footprint.findAll({
+      where: {
+        userId: sessionUser.id,
+      },
+      order: ["createdAt"],
+    }).then((data: Footprint[]) => res.status(200).json(data));
   }
 }
