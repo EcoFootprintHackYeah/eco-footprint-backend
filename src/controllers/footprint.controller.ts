@@ -1,6 +1,8 @@
 import { transport } from "carbon-footprint";
 import { Request, Response } from "express";
 import moment from "moment";
+import { col } from "sequelize";
+import { fn } from "sequelize";
 import { Op } from "sequelize";
 import { Footprint } from "../model/footprint.model";
 
@@ -74,7 +76,7 @@ export class FootprintController {
 
     const totalMonthly = footprints.reduce((a, b) => a + b.value, 0);
     const totalAggregatedDaily = footprint * moment().diff(dateFrom, "days");
-    res.status(200).json({total: totalMonthly + totalAggregatedDaily});
+    res.status(200).json({ total: totalMonthly + totalAggregatedDaily });
   }
 
   public updateTrip(req: Request, res: Response) {
@@ -111,5 +113,30 @@ export class FootprintController {
       },
       order: ["createdAt"],
     }).then((data: Footprint[]) => res.status(200).json(data));
+  }
+
+  public async getGroupedMonthlyData(req: Request, res: Response) {
+    const sessionUser = res.locals.user as User;
+    const dateFrom = moment(Date.now()).startOf("month");
+    const footprints = await Footprint.findAll({
+      where: {
+        createdAt: {
+          [Op.gt]: dateFrom.toDate(),
+          [Op.lte]: Date.now(),
+        },
+        userId: sessionUser.id,
+      },
+    });
+    const totalMonthlyTrips = footprints.reduce((a, b) => a + b.value, 0);
+
+    console.log(footprints);
+    const allDays = moment().diff(dateFrom, "days");
+    res.status(200).json({
+      trips: totalMonthlyTrips,
+      electricity: sessionUser.getElectricityFootprint() * allDays,
+      music: sessionUser.getMusicFootprint() * allDays,
+      streaming: sessionUser.getStreamingFootprint() * allDays,
+      food: sessionUser.getFoodFootprint() * allDays,
+    });
   }
 }

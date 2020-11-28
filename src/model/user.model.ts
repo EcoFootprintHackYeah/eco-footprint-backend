@@ -1,5 +1,4 @@
 import {
-  electricity,
   ElectricityType,
   food,
   getInternetUsageCarbonImpact,
@@ -13,6 +12,7 @@ import {
   STRING,
   IntegerDataType,
 } from "sequelize";
+import electricityCarbonService from "../electricityCarbonService";
 import { database } from "./db";
 
 const FoodPortion = 0.15; // kg
@@ -34,33 +34,48 @@ export class User extends Model {
   public readonly updatedAt!: Date;
 
   public computeDailyCarbonFootprint(): number {
-    const lowerCasedCountry = this.country.toLowerCase();
-    const electricityPrice = (<any>electricity)[lowerCasedCountry];
-    const electricityType: ElectricityType = (<any>ElectricityType)[
-      lowerCasedCountry
-    ];
     // electricity.
-    const electricalFootprint = electricityPrice * (this.kwhPerMonth / 30);
+    return (
+      this.getElectricityFootprint() +
+      this.getMusicFootprint() +
+      this.getStreamingFootprint() +
+      this.getFoodFootprint()
+    );
+  }
 
-    const streamingFootprint = getInternetUsageCarbonImpact(
+  public getElectricityFootprint() {
+    const lowerCasedCountry = this.country.toLowerCase();
+    const electricityPrice = (<any>electricityCarbonService)[lowerCasedCountry];
+    console.log(electricityPrice);
+    return electricityPrice * (this.kwhPerMonth / 30);
+  }
+
+  public getStreamingFootprint() {
+    return getInternetUsageCarbonImpact(
       (this.netflixHoursPerWeek / 7) * 3600, // seconds
       streaming.fullHDVideo,
-      electricityType
+      this.getElectricityType()
     );
+  }
 
-    const musicFootprint = getInternetUsageCarbonImpact(
+  public getMusicFootprint() {
+    return getInternetUsageCarbonImpact(
       this.musicHoursPerDay, // seconds
       streaming.audioMP3,
-      electricityType
+      this.getElectricityType()
     );
+  }
 
-    const foodFootprint =
+  public getElectricityType(): ElectricityType {
+    const lowerCasedCountry = this.country.toLowerCase();
+    return (<any>ElectricityType)[lowerCasedCountry];
+  }
+
+  public getFoodFootprint(): number {
+    return (
       (this.whiteMeatPerWeek / 7) * FoodPortion * food.whiteMeat +
       (this.redMeatPerWeek / 7) * FoodPortion * food.redMeat +
-      (this.fishPerWeek / 7) * FoodPortion * food.fish;
-
-    return (
-      electricalFootprint + musicFootprint + streamingFootprint + foodFootprint
+      (this.fishPerWeek / 7) * FoodPortion * food.fish
     );
   }
 }
@@ -73,7 +88,7 @@ User.init(
       primaryKey: true,
     },
     apiKey: {
-      type: new STRING(32),
+      type: DataTypes.STRING(64),
       allowNull: false,
     },
     redMeatPerWeek: {
@@ -97,7 +112,7 @@ User.init(
       allowNull: false,
     },
     country: {
-      type: DataTypes.ENUM(...AllowedCountries),
+      type: DataTypes.STRING(1000),
       allowNull: false,
     },
     kwhPerMonth: {

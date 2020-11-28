@@ -30,6 +30,9 @@ export class Routes {
       .route("/api/footprint/trips")
       .get(authMiddleware, this.footprintController.getTrips);
     app
+      .route("/api/footprint/monthly/grouped")
+      .get(authMiddleware, this.footprintController.getGroupedMonthlyData);
+    app
       .route("/api/advices/today")
       .get(authMiddleware, this.advicesController.getDailyAdvice);
   }

@@ -5,7 +5,6 @@ import { User } from "./user.model";
 
 export class Footprint extends Model {
   public id!: number;
-  public apiKey!: string;
   public value!: number;
   public transport!: string;
   public totalDistance!: number;
