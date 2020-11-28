@@ -21,6 +21,9 @@ export class Routes {
       .route("/api/footprint/trip")
       .post(authMiddleware, this.footprintController.addTrip);
     app
+      .route("/api/footprint/monthly")
+      .get(authMiddleware, this.footprintController.getMonthlyFootprint);
+    app
       .route("/api/advices/today")
       .get(authMiddleware, this.advicesController.getDailyAdvice);
   }
