@@ -15,5 +15,8 @@ export class Routes {
     app
       .route("/api/footprint/base/today")
       .get(authMiddleware, this.footprintController.getDailyBase);
+    app
+      .route("/api/footprint/trip")
+      .post(authMiddleware, this.footprintController.addTrip);
   }
 }

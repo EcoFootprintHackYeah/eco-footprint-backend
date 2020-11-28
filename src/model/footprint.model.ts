@@ -10,15 +10,6 @@ export class Footprint extends Model {
   public readonly updatedAt!: Date;
 }
 
-export const FootprintTypeValues = [
-  "car",
-  "bus",
-  "plane",
-  "food",
-  "streaming",
-  "electricty",
-];
-
 Footprint.init(
   {
     id: {
@@ -34,8 +25,20 @@ Footprint.init(
         key: "id",
       },
     },
-    footprintType: {
-      type: DataTypes.ENUM(...FootprintTypeValues),
+    value: {
+      type: DataTypes.DOUBLE.UNSIGNED,
+      allowNull: false,
+    },
+    totalDistance: {
+      type: DataTypes.DOUBLE.UNSIGNED,
+      allowNull: false,
+    },
+    avgSpeed: {
+      type: DataTypes.DOUBLE.UNSIGNED,
+      allowNull: false,
+    },
+    transport: {
+      type: new STRING(32),
       allowNull: false,
     },
   },
