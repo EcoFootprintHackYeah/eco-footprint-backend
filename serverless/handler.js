@@ -27,14 +27,21 @@ const transportEstimation = function (avgSpeed) {
 exports.handle = function (event, context) {
   let distances = [];
   let speeds = [];
+  if (event.httpMethod !== "POST") {
+    return {
+      status: 200,
+    };
+  }
   const data = JSON.parse(event.body);
   for (let i = 1; i < data.points.length; i++) {
     console.log(data.points[i].ts);
     const time = Math.abs((data.points[i].ts - data.points[i - 1].ts) / 1000);
     console.log(time);
     const dist = getDistanceHaversine(data.points[i - 1], data.points[i]);
-    distances.push(dist);
-    speeds.push((dist / time) * 3.6); // m/s to km/h
+    if (dist && dist > 0) {
+      distances.push(dist);
+      speeds.push((dist / time) * 3.6); // m/s to km/h
+    }
   }
   const avgSpeed = speeds.reduce((a, b) => a + b, 0) / speeds.length;
   return {

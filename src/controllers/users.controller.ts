@@ -4,6 +4,12 @@ import { User } from "../model/user.model";
 
 interface CreationData {
   country: string;
+  redMeatPerWeek: number;
+  whiteMeatPerWeek: number;
+  fishPerWeek: number;
+  netflixHoursPerWeek: number;
+  musicHoursPerDay: number;
+  kwhPerMonth: number;
 }
 
 export class UsersController {
