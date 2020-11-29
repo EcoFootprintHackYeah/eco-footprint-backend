@@ -16,6 +16,7 @@ export class Routes {
   public routes(app: Application) {
     app.route("/api").get(this.indexController.index);
     app.route("/api/user").post(this.usersController.create);
+    app.route("/api/user").delete(authMiddleware, this.usersController.delete);
     app
       .route("/api/footprint/base/today")
       .get(authMiddleware, this.footprintController.getDailyBase);

@@ -22,7 +22,15 @@ export class UsersController {
       .catch((err: Error) => res.status(500).json(err));
   }
 
-  // public updateFootprints(req: Request, res: Response) {
-  //   const data = req.body as ;
-  // }
+  public delete(req: Request, res: Response) {
+    const sessionUser = res.locals.user as User;
+
+    User.destroy<User>({
+      where: {
+        id: sessionUser.id,
+      },
+    })
+      .then(() => res.status(200).json({ deleted: "yes" }))
+      .catch((err: Error) => res.status(500).json(err));
+  }
 }
